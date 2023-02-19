@@ -92,8 +92,8 @@ func (g *GroupMessageHandler) ReplyText() error {
 
 	// 2.获取请求的文本，如果为空字符串不处理
 	requestText := g.getRequestText()
-	if requestText == "" || (!strings.Contains(requestText, "?") && !strings.Contains(requestText, "？") && !strings.Contains(requestText, "请")) {
-		logger.Info("请求输入为空，或者不包含? ? 请 ")
+	if requestText == "" {
+		logger.Info("请求输入为空，或者不包含唤醒条件")
 		return nil
 	}
 
@@ -145,7 +145,7 @@ func (g *GroupMessageHandler) getRequestText() string {
 	if c != nil && len(c) != 0 {
 		contain := false
 		for _, item := range c {
-			if strings.Contains(requestText, item) { //只要满足其中的一个条件则成功
+			if strings.Contains(g.msg.Content, item) { //只要满足其中的一个条件则成功
 				contain = true
 				break
 			}

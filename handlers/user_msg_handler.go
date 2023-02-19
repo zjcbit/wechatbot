@@ -119,7 +119,7 @@ func (h *UserMessageHandler) getRequestText() string {
 	if c != nil && len(c) != 0 {
 		contain := false
 		for _, item := range c {
-			if strings.Contains(requestText, item) { //只要满足其中的一个条件则成功
+			if strings.Contains(h.msg.Content, item) { //只要满足其中的一个条件则成功
 				contain = true
 				break
 			}

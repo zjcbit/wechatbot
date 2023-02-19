@@ -6,7 +6,7 @@
   "model": "text-davinci-003",
   "temperature": 1,
   "reply_prefix": "来自机器人回复：",
-  "session_clear_token": "清空会话",
-  "reply_condition": [",", "，", "请"],
+  "session_clear_token": "下一话题",
+  "reply_condition": ["?", "？", "请"],
   "help_token": "你好"
 }
