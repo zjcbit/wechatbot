@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/qingconglaixueit/wechatbot/config"
-	"github.com/qingconglaixueit/wechatbot/pkg/logger"
 	"github.com/eatmoreapple/openwechat"
 	"github.com/patrickmn/go-cache"
+	"github.com/qingconglaixueit/wechatbot/config"
+	"github.com/qingconglaixueit/wechatbot/pkg/logger"
 	"github.com/skip2/go-qrcode"
 	"log"
 	"runtime"
@@ -37,10 +37,9 @@ func QrCodeCallBack(uuid string) {
 
 func NewHandler() (msgFunc func(msg *openwechat.Message), err error) {
 	dispatcher := openwechat.NewMessageMatchDispatcher()
-
-	// 清空会话
+	// 指令消息处理
 	dispatcher.RegisterHandler(func(message *openwechat.Message) bool {
-		return strings.Contains(message.Content, config.LoadConfig().SessionClearToken)
+		return isTokenMessage(message)
 	}, TokenMessageContextHandler())
 
 	// 处理群消息

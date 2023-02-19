@@ -73,7 +73,7 @@ func (h *UserMessageHandler) ReplyText() error {
 	// 1.获取上下文，如果字符串为空不处理
 	requestText := h.getRequestText()
 	if requestText == "" {
-		logger.Info("user message is null")
+		logger.Info("请求输入为空，或者不包含? ? 请 ")
 		return nil
 	}
 	logger.Info(fmt.Sprintf("h.sender.NickName == %+v", h.sender.NickName))
@@ -115,6 +115,20 @@ func (h *UserMessageHandler) getRequestText() string {
 		requestText = requestText[:4000]
 	}
 
+	c := config.LoadConfig().ReplyCondition
+	if c != nil && len(c) != 0 {
+		contain := false
+		for _, item := range c {
+			if strings.Contains(requestText, item) { //只要满足其中的一个条件则成功
+				contain = true
+				break
+			}
+		}
+		if !contain {
+			logger.Info("唤醒条件为包含以下的某个字符串: ", c)
+			return ""
+		}
+	}
 	// 3.检查用户发送文本是否包含结束标点符号
 	punctuation := ",.;!?，。！？、…"
 	runeRequestText := []rune(requestText)

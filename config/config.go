@@ -29,6 +29,10 @@ type Configuration struct {
 	ReplyPrefix string `json:"reply_prefix"`
 	// 清空会话口令
 	SessionClearToken string `json:"session_clear_token"`
+	// 回复条件
+	ReplyCondition []string `json:"reply_condition"`
+	// 帮助kouling
+	HelpToken string `json:"help_token"`
 }
 
 var config *Configuration
@@ -45,6 +49,7 @@ func LoadConfig() *Configuration {
 			Model:             "text-davinci-003",
 			Temperature:       0.9,
 			SessionClearToken: "下一个问题",
+			HelpToken:         "你好",
 		}
 
 		// 判断配置文件是否存在，存在直接JSON读取
@@ -72,6 +77,7 @@ func LoadConfig() *Configuration {
 		Temperature := os.Getenv("TEMPREATURE")
 		ReplyPrefix := os.Getenv("REPLY_PREFIX")
 		SessionClearToken := os.Getenv("SESSION_CLEAR_TOKEN")
+		HelpToken := os.Getenv("HELP_TOKEN")
 		if ApiKey != "" {
 			config.ApiKey = ApiKey
 		}
@@ -110,6 +116,9 @@ func LoadConfig() *Configuration {
 		}
 		if SessionClearToken != "" {
 			config.SessionClearToken = SessionClearToken
+		}
+		if HelpToken != "" {
+			config.HelpToken = HelpToken
 		}
 
 	})

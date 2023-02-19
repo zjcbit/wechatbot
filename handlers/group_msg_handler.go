@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/eatmoreapple/openwechat"
+	"github.com/qingconglaixueit/wechatbot/config"
 	"github.com/qingconglaixueit/wechatbot/gpt"
 	"github.com/qingconglaixueit/wechatbot/pkg/logger"
 	"github.com/qingconglaixueit/wechatbot/service"
@@ -91,8 +92,8 @@ func (g *GroupMessageHandler) ReplyText() error {
 
 	// 2.获取请求的文本，如果为空字符串不处理
 	requestText := g.getRequestText()
-	if requestText == "" {
-		logger.Info("user message is null")
+	if requestText == "" || (!strings.Contains(requestText, "?") && !strings.Contains(requestText, "？") && !strings.Contains(requestText, "请")) {
+		logger.Info("请求输入为空，或者不包含? ? 请 ")
 		return nil
 	}
 
@@ -140,7 +141,20 @@ func (g *GroupMessageHandler) getRequestText() string {
 	if len(requestText) >= 4000 {
 		requestText = requestText[:4000]
 	}
-
+	c := config.LoadConfig().ReplyCondition
+	if c != nil && len(c) != 0 {
+		contain := false
+		for _, item := range c {
+			if strings.Contains(requestText, item) { //只要满足其中的一个条件则成功
+				contain = true
+				break
+			}
+		}
+		if !contain {
+			logger.Info("唤醒条件为包含以下的某个字符串: ", c)
+			return ""
+		}
+	}
 	// 4.检查用户发送文本是否包含结束标点符号
 	punctuation := ",.;!?，。！？、…"
 	runeRequestText := []rune(requestText)
